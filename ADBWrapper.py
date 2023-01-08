@@ -1,12 +1,13 @@
 import subprocess
 import time
 from pathlib import Path
-
+from typing import Union
 from MyLogger3 import MyLogger
 
 
 class ADBWrapper:
     logger = MyLogger("ADBWrapper")
+    __DEFAULT_DEVICE_CODE = "__DEFAULT_DEVICE_CODE"
     __COMMAND_TEMPLATE_TAP = "shell input touchscreen tap {x} {y}"
     __COMMAND_TEMPLATE_DOWN = "shell input motionevent DOWN {x} {y}"
     __COMMAND_TEMPLATE_UP = "shell input motionevent UP {x} {y}"
@@ -19,21 +20,22 @@ class ADBWrapper:
     __COMMAND_TEMPLATE_BROADCAST = "shell am broadcast -a {intent_filter}"
     __COMMAND_TEMPLATE_GET_PACKAGE = "shell dumpsys activity activities"
 
-    def __init__(self, target_device_code=None, print_flag=True, file_flag=False):
+    def __init__(self, target_device_code: str = __DEFAULT_DEVICE_CODE, print_flag: bool = True,
+                 file_flag: bool = False):
         self.deviceCode = target_device_code
         self.logger.setPrintFlag(print_flag)
         self.logger.setFileFlag(file_flag)
 
-    def addLogFilePath(self, path):
+    def addLogFilePath(self, path: Path) -> None:
         self.logger.addLogFilePath(path)
 
-    def setPrintFlag(self, print_flag):
+    def setPrintFlag(self, print_flag: bool) -> None:
         self.logger.setPrintFlag(print_flag)
 
-    def setFileFlag(self, file_flag):
+    def setFileFlag(self, file_flag: bool) -> None:
         self.logger.setFileFlag(file_flag)
 
-    def tap(self, x, y, sync_flag=True, count=1, span=0, end_time=0):
+    def tap(self, x: int, y: int, sync_flag: bool = True, count: int = 1, span: int = 0, end_time: int = 0) -> None:
         self.logger.info("Tap x={}, y={}".format(x, y))
         cmdList = self.__createADBCommand(
             ADBWrapper.__COMMAND_TEMPLATE_TAP.format(x=x, y=y)
@@ -48,7 +50,8 @@ class ADBWrapper:
         if end_time != 0:
             time.sleep(end_time)
 
-    def longTap(self, x, y, hold_time, sync_flag=True, count=1, span=0, end_time=0):
+    def longTap(self, x: int, y: int, hold_time: int, sync_flag: bool = True, count: int = 1, span: int = 0,
+                end_time: int = 0) -> None:
         self.logger.info("LongTap x={}, y={}, holdTime={}".format(x, y, hold_time))
         downCommandList = self.__createADBCommand(
             ADBWrapper.__COMMAND_TEMPLATE_DOWN.format(x=x, y=y)
@@ -70,7 +73,7 @@ class ADBWrapper:
         if end_time != 0:
             time.sleep(end_time)
 
-    def swipe(self, x1, y1, x2, y2, end_time=0, swipe_speed=1000):
+    def swipe(self, x1: int, y1: int, x2: int, y2: int, end_time: int = 0, swipe_speed: int = 1000) -> None:
         self.logger.info("Swipe x={} to {}, y={} to {}".format(x1, y1, x2, y2))
         cmdList = self.__createADBCommand(
             ADBWrapper.__COMMAND_TEMPLATE_SWIPE.format(
@@ -81,7 +84,7 @@ class ADBWrapper:
         if end_time != 0:
             time.sleep(end_time)
 
-    def down(self, x, y, end_time=0):
+    def down(self, x: int, y: int, end_time: int = 0) -> None:
         self.logger.info("DOWN x={}, y={}".format(x, y))
         cmdList = self.__createADBCommand(
             ADBWrapper.__COMMAND_TEMPLATE_DOWN.format(x=x, y=y)
@@ -90,7 +93,7 @@ class ADBWrapper:
         if end_time != 0:
             time.sleep(end_time)
 
-    def move(self, x, y, end_time=0, sync_flag=True):
+    def move(self, x: int, y: int, end_time: int = 0, sync_flag: bool = True) -> None:
         self.logger.info("MOVE x={}, y={}".format(x, y))
         cmdList = self.__createADBCommand(
             ADBWrapper.__COMMAND_TEMPLATE_MOVE.format(x=x, y=y)
@@ -102,7 +105,7 @@ class ADBWrapper:
         if end_time != 0:
             time.sleep(end_time)
 
-    def up(self, x, y, end_time=0):
+    def up(self, x: int, y: int, end_time: int = 0) -> None:
         self.logger.info("(UP x={}, y={}".format(x, y))
         cmdList = self.__createADBCommand(
             ADBWrapper.__COMMAND_TEMPLATE_UP.format(x=x, y=y)
@@ -111,7 +114,7 @@ class ADBWrapper:
         if end_time != 0:
             time.sleep(end_time)
 
-    def launchApp(self, app_id, activity_name):
+    def launchApp(self, app_id: str, activity_name: str) -> None:
         self.logger.info("LaunchApp app_id = {}, activity = {}".format(app_id, activity_name))
         cmdList = self.__createADBCommand(
             ADBWrapper.__COMMAND_TEMPLATE_LAUNCH.format(
@@ -121,7 +124,7 @@ class ADBWrapper:
         )
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
 
-    def getScreenShot(self, path, file_name):
+    def getScreenShot(self, path: Path, file_name: str) -> None:
         filePath = Path(path, file_name + ".png")
         self.logger.info("ScreenShot = {}".format(filePath))
         subprocess.run(
@@ -137,7 +140,7 @@ class ADBWrapper:
             stdout=subprocess.DEVNULL
         )
 
-    def sendBroadcastCommand(self, intent_filter, args):
+    def sendBroadcastCommand(self, intent_filter: str, args: dict[str, Union[str, int]]) -> None:
         self.logger.info("SendBroadcast intent_filter={}".format(intent_filter))
         cmdList = self.__createADBCommand(
             ADBWrapper.__COMMAND_TEMPLATE_BROADCAST.format(intent_filter=intent_filter)
@@ -152,7 +155,7 @@ class ADBWrapper:
         self.logger.info(cmdList)
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
 
-    def getPackageAndActivity(self):
+    def getPackageAndActivity(self) -> tuple[str, str]:
         resultStringList = str(subprocess.run(
             self.__createADBCommand(ADBWrapper.__COMMAND_TEMPLATE_GET_PACKAGE), stdout=subprocess.PIPE)
         ).split("\\n")
@@ -164,8 +167,9 @@ class ADBWrapper:
                 self.logger.info("package={}".format(package))
                 self.logger.info("activity={}".format(activity))
                 return package, activity
+        return "", ""
 
-    def __createADBCommand(self, command_string):
+    def __createADBCommand(self, command_string: str) -> list[str]:
         commandPrefix = "adb "
         if self.deviceCode is not None:
             commandPrefix += "-s {} ".format(self.deviceCode)
