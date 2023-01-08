@@ -2,7 +2,7 @@ import subprocess
 import time
 from pathlib import Path
 from typing import Union
-from MyLogger3 import MyLogger
+from MyLogger.MyLogger import MyLogger
 
 
 class ADBWrapper:
@@ -21,20 +21,18 @@ class ADBWrapper:
     __COMMAND_TEMPLATE_GET_PACKAGE = "shell dumpsys activity activities"
     __COMMAND_TEMPLATE_CONNECT_WIRELESS = "connect {ip_address}:{port}"
 
-    def __init__(self, target_device_code: str = __DEFAULT_DEVICE_CODE, print_flag: bool = True,
-                 file_flag: bool = False):
+    def __init__(self, target_device_code: str = __DEFAULT_DEVICE_CODE, print_flag: bool = True):
         self.deviceCode = target_device_code
-        self.logger.setPrintFlag(print_flag)
-        self.logger.setFileFlag(file_flag)
+        self.logger.isPrintLog(print_flag)
 
     def addLogFilePath(self, path: Path) -> None:
         self.logger.addLogFilePath(path)
 
     def setPrintFlag(self, print_flag: bool) -> None:
-        self.logger.setPrintFlag(print_flag)
+        self.logger.isPrintLog(print_flag)
 
     def setFileFlag(self, file_flag: bool) -> None:
-        self.logger.setFileFlag(file_flag)
+        self.logger.isPrintLog(file_flag)
 
     def tap(self, x: int, y: int, sync_flag: bool = True, count: int = 1, span: int = 0, end_time: int = 0) -> None:
         self.logger.info("Tap x={}, y={}".format(x, y))
