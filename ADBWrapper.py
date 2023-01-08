@@ -19,6 +19,7 @@ class ADBWrapper:
     __COMMAND_TEMPLATE_REMOVE_SCREENSHOT = "shell rm /sdcard/screen_shot_temp.png"
     __COMMAND_TEMPLATE_BROADCAST = "shell am broadcast -a {intent_filter}"
     __COMMAND_TEMPLATE_GET_PACKAGE = "shell dumpsys activity activities"
+    __COMMAND_TEMPLATE_CONNECT_WIRELESS = "connect {ip_address}:{port}"
 
     def __init__(self, target_device_code: str = __DEFAULT_DEVICE_CODE, print_flag: bool = True,
                  file_flag: bool = False):
@@ -168,6 +169,14 @@ class ADBWrapper:
                 self.logger.info("activity={}".format(activity))
                 return package, activity
         return "", ""
+
+    def wirelessConnect(self, ip_address: str, port: str) -> None:
+        self.logger.info("Connect to {}:{}".format(ip_address, port))
+        cmdList = self.__createADBCommand(
+            ADBWrapper.__COMMAND_TEMPLATE_CONNECT_WIRELESS.format(ip_address=ip_address, port=port)
+        )
+        self.deviceCode = "{}:{}".format(ip_address, port)
+        subprocess.run(cmdList, stdout=subprocess.DEVNULL)
 
     def __createADBCommand(self, command_string: str) -> list[str]:
         commandPrefix = "adb "
