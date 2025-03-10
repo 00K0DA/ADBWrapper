@@ -29,6 +29,10 @@ class ADBWrapper:
     __COMMAND_WAIT_FOR_DEVICE = "wait-for-device"
     __COMMAND_WAIT_FOR_BOOT_COMPLETE = "shell getprop sys.boot_completed"
     __COMMAND_TEMPLATE_STOP_APP = "shell am force-stop {app_id}"
+    __COMMAND_TEMPLATE_DISPLAY_DALTONIZER_ENABLED = "shell settings put secure accessibility_display_daltonizer_enabled {enabled}"
+    __COMMAND_TEMPLATE_DISPLAY_DALTONIZER_GARY_SCALE = "shell settings put secure accessibility_display_daltonizer 0"
+    __COMMAND_PRESS_BACK_BUTTON = "shell input keyevent KEYCODE_BACK"
+    __COMMAND_TEMPLATE_INPUT_TEXT = "shell input text {text}"
 
     def __init__(self, target_device_code: str = __DEFAULT_DEVICE_CODE, print_flag: bool = True):
         self.deviceCode = target_device_code
@@ -231,6 +235,38 @@ class ADBWrapper:
     def stopApp(self, app_id: str) -> None:
         self.logger.info("StopApp app_id={}".format(app_id))
         cmdList = self.__createADBCommand(ADBWrapper.__COMMAND_TEMPLATE_STOP_APP.format(app_id=app_id))
+        subprocess.run(cmdList, stdout=subprocess.DEVNULL)
+
+    def setScreenGrayScale(self, enabled: bool) -> None:
+        if enabled:
+            cmdList = self.__createADBCommand(
+                ADBWrapper.__COMMAND_TEMPLATE_DISPLAY_DALTONIZER_ENABLED.format(enabled=1)
+            )
+            subprocess.run(cmdList, stdout=subprocess.DEVNULL)
+            cmdList = self.__createADBCommand(
+                ADBWrapper.__COMMAND_TEMPLATE_DISPLAY_DALTONIZER_GARY_SCALE
+            )
+            subprocess.run(cmdList, stdout=subprocess.DEVNULL)
+        else:
+            cmdList = self.__createADBCommand(
+                ADBWrapper.__COMMAND_TEMPLATE_DISPLAY_DALTONIZER_ENABLED.format(enabled=0)
+            )
+            subprocess.run(cmdList, stdout=subprocess.DEVNULL)
+
+    def pressBackButton(self) -> None:
+        self.__keyEvent("KEYCODE_BACK")
+
+    def pressEnterButton(self) -> None:
+        self.__keyEvent("KEYCODE_ENTER")
+
+    def pressSearchButton(self) -> None:
+        self.__keyEvent("KEYCODE_SEARCH")
+
+    def inputText(self, text: str) -> None:
+        text = text.replace(" ", "%s")
+        cmdList = self.__createADBCommand(
+            ADBWrapper.__COMMAND_TEMPLATE_INPUT_TEXT.format(text=text)
+        )
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
 
     def __keyEvent(self, key_code: str) -> None:
