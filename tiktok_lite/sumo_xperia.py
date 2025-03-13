@@ -54,7 +54,7 @@ def open_app_and_page():
     time.sleep(5)
     adb.open_spark_page()
     adb.swipe(540, 200, 540, 1200)
-    adb.swipe(540, 200, 540, 1200)
+    adb.swipe(540, 200, 540, 1200, end_time=2)
     adb.tap(540, 1975, end_time=2)
     adb.tap(540, 1560, count=5, span=1)
     adb.tap(1120, 440, count=5, span=1)
@@ -65,5 +65,5 @@ def close_app():
 
 
 if __name__ == "__main__":
-    wait_start_time(21, 20)
+    # wait_start_time(21, 20)
     main()
