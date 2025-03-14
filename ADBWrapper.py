@@ -26,14 +26,14 @@ class ADBWrapper:
         self.deviceCode = target_device_code
         self.logger = logging.getLogger(__name__)
         self.stream_handler = None
-        self.setPrintFlag(print_flag)
+        self.set_print_flag(print_flag)
 
     def add_log_file_path(self, path: Path) -> None:
         handler = logging.FileHandler(path)
         handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
         self.logger.addHandler(handler)
 
-    def setPrintFlag(self, print_flag: bool) -> None:
+    def set_print_flag(self, print_flag: bool) -> None:
         if print_flag:
             if self.stream_handler is None:
                 self.stream_handler = logging.StreamHandler()
@@ -46,7 +46,7 @@ class ADBWrapper:
                 self.stream_handler = None
             self.logger.setLevel(logging.WARNING)
 
-    def setFileFlag(self, file_flag: bool) -> None:
+    def set_file_flag(self, file_flag: bool) -> None:
         if file_flag:
             self.logger.setLevel(logging.INFO)
         else:
