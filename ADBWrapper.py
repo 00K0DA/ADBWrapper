@@ -28,7 +28,7 @@ class ADBWrapper:
         self.stream_handler = None
         self.setPrintFlag(print_flag)
 
-    def addLogFilePath(self, path: Path) -> None:
+    def add_log_file_path(self, path: Path) -> None:
         handler = logging.FileHandler(path)
         handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
         self.logger.addHandler(handler)
