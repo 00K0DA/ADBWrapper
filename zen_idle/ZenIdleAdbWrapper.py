@@ -129,7 +129,7 @@ class ZenIdleAdbWrapper(ADBWrapper):
         self.logger.startFuncLog()
         if Constants.TEMP_IMAGE_PATH.exists():
             Constants.TEMP_IMAGE_PATH.unlink()
-        self.getScreenShot(Constants.TEMP_DIR_PATH, Constants.TEMP_IMAGE_NAME)
+        self.get_screen_shot(Constants.TEMP_DIR_PATH, Constants.TEMP_IMAGE_NAME)
 
     def buy_card(self):
         self.logger.startFuncLog()

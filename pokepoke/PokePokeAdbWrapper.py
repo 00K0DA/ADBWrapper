@@ -36,7 +36,7 @@ class PokePokeADBWrapper(ADBWrapper, ABC):
         sleep(10)
 
     def is_home_screen_shown(self) -> bool:
-        self.getScreenShot(self.image_dir_path, self.image_name)
+        self.get_screen_shot(self.image_dir_path, self.image_name)
         home_color_list = [(242, 236, 224), (241, 236, 226)]
         color = get_color(0, 0, self.image_path)
         result_list = [np.array_equal(color, home_color) for home_color in home_color_list]
@@ -92,14 +92,14 @@ class PokePokeADBWrapper(ADBWrapper, ABC):
         pass
 
     def is_liked(self, x, y) -> bool:
-        self.getScreenShot(self.image_dir_path, self.image_name)
+        self.get_screen_shot(self.image_dir_path, self.image_name)
         liked_color_list = [(249, 246, 239), (249, 246, 240)]
         color = get_color(x, y, self.image_path)
         result_list = [np.array_equal(color, liked_color) for liked_color in liked_color_list]
         return any(result_list)
 
     def send_result_screen(self):
-        self.getScreenShot(self.image_dir_path, self.image_name)
+        self.get_screen_shot(self.image_dir_path, self.image_name)
         message = DiscordMessage(
             title="開封結果",
             message_list=[f"device_code = {self.deviceCode}"],

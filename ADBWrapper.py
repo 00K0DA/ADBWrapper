@@ -129,7 +129,7 @@ class ADBWrapper:
         cmdList = self.__createADBCommand(cmd.format_command())
         subprocess.run(cmdList, stdout=subprocess.PIPE)
 
-    def getScreenShot(self, path: Path, file_name: str) -> None:
+    def get_screen_shot(self, path: Path, file_name: str) -> None:
         filePath = Path(path, file_name + ".png")
         self.logger.info("ScreenShot = %s", filePath)
         while True:

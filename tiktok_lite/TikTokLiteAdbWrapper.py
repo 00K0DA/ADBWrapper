@@ -46,7 +46,7 @@ class TikTokLiteAdbWrapper(ADBWrapper):
 
     def is_live_video_shown(self) -> bool:
         live_color = (222, 67, 137)
-        self.getScreenShot(TEMP_DIR_PATH, TEMP_IMAGE_NAME)
+        self.get_screen_shot(TEMP_DIR_PATH, TEMP_IMAGE_NAME)
         return is_include_color(40, 1980, 40, 60, live_color, TEMP_IMAGE_PATH)
 
     def stop_tiktok(self) -> None:
@@ -59,7 +59,7 @@ class TikTokLiteAdbWrapper(ADBWrapper):
         self.tap(1000, 200)
 
     def read_live_watch_reward_button_text(self) -> str:
-        self.getScreenShot(TEMP_DIR_PATH, TEMP_IMAGE_NAME)
+        self.get_screen_shot(TEMP_DIR_PATH, TEMP_IMAGE_NAME)
         ocr.crop_image(TEMP_IMAGE_PATH, TEMP_IMAGE_PATH, 430, 1790, 220, 50)
         return ocr.read_eng_string(TEMP_IMAGE_PATH)
 

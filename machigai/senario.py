@@ -20,7 +20,7 @@ def solve_diff(adb: MachigaiAdbWrapper):
     image_dir_path = base_path / "screenshot"
     image_name = adb.deviceCode
     image_path = Path(image_dir_path, image_name + ".png")
-    adb.getScreenShot(image_dir_path, image_name)
+    adb.get_screen_shot(image_dir_path, image_name)
     for x, y in get_diff_coordinates(image_path, adb.get_first_image_coordinate(), adb.get_second_image_coordinate()):
         adb.tap(x, y, end_time=0.5)
     logging.debug("Finish solve_diff")

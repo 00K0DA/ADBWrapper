@@ -8,7 +8,7 @@ def main():
     print(activity_name)
     from pathlib import Path
     base_path = Path(__file__).parent
-    adb.getScreenShot(base_path, "home")
+    adb.get_screen_shot(base_path, "home")
 
 
 if __name__ == "__main__":
