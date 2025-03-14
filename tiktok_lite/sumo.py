@@ -110,7 +110,7 @@ def send_start_message() -> None:
     adb.get_screen_shot(base_path, screen_shot_image_name)
     message = DiscordNotificator.DiscordMessage(
         title="タップ処理の開始",
-        message_list=[f"device_code = {adb.deviceCode}"],
+        message_list=[f"device_code = {adb.device_code}"],
         image_path=screen_shot_path
     )
     dis.send_message(message)
@@ -122,7 +122,7 @@ def send_progress_message(tap_count: int, max_tap_count: int) -> None:
     message = DiscordNotificator.DiscordMessage(
         title="進捗",
         message_list=[
-            f"device_code = {adb.deviceCode}",
+            f"device_code = {adb.device_code}",
             f"{tap_count} taps completed. {percent:.2f}%"],
         image_path=screen_shot_path
     )
@@ -133,7 +133,7 @@ def send_end_message() -> None:
     adb.get_screen_shot(base_path, screen_shot_image_name)
     message = DiscordNotificator.DiscordMessage(
         title="タップ処理の終了",
-        message_list=[f"device_code = {adb.deviceCode}"],
+        message_list=[f"device_code = {adb.device_code}"],
         image_path=screen_shot_path
     )
 

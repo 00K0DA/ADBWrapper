@@ -18,7 +18,7 @@ logging.basicConfig(
 def solve_diff(adb: MachigaiAdbWrapper):
     base_path = Path(__file__).parent
     image_dir_path = base_path / "screenshot"
-    image_name = adb.deviceCode
+    image_name = adb.device_code
     image_path = Path(image_dir_path, image_name + ".png")
     adb.get_screen_shot(image_dir_path, image_name)
     for x, y in get_diff_coordinates(image_path, adb.get_first_image_coordinate(), adb.get_second_image_coordinate()):
