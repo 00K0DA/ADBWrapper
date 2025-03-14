@@ -1,10 +1,10 @@
 import re
 import subprocess
 import time
+import logging
 from pathlib import Path
 from typing import Union
 from threading import Timer
-from MyLogger import MyLogger
 from adb_commands import (
     # Input Commands
     Tap, Swipe, Down, Up, Move, Text, KeyEvent,
@@ -20,25 +20,41 @@ from adb_commands import (
 
 
 class ADBWrapper:
-    logger = MyLogger("ADBWrapper")
     __DEFAULT_DEVICE_CODE = "__DEFAULT_DEVICE_CODE"
 
     def __init__(self, target_device_code: str = __DEFAULT_DEVICE_CODE, print_flag: bool = True):
         self.deviceCode = target_device_code
-        self.logger.isPrintLog(print_flag)
+        self.logger = logging.getLogger(__name__)
+        self.stream_handler = None
+        self.setPrintFlag(print_flag)
 
     def addLogFilePath(self, path: Path) -> None:
-        self.logger.addLogFilePath(path)
+        handler = logging.FileHandler(path)
+        handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+        self.logger.addHandler(handler)
 
     def setPrintFlag(self, print_flag: bool) -> None:
-        self.logger.isPrintLog(print_flag)
+        if print_flag:
+            if self.stream_handler is None:
+                self.stream_handler = logging.StreamHandler()
+                self.stream_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+                self.logger.addHandler(self.stream_handler)
+            self.logger.setLevel(logging.INFO)
+        else:
+            if self.stream_handler is not None:
+                self.logger.removeHandler(self.stream_handler)
+                self.stream_handler = None
+            self.logger.setLevel(logging.WARNING)
 
     def setFileFlag(self, file_flag: bool) -> None:
-        self.logger.isPrintLog(file_flag)
+        if file_flag:
+            self.logger.setLevel(logging.INFO)
+        else:
+            self.logger.setLevel(logging.WARNING)
 
     def tap(self, x: int, y: int, sync_flag: bool = True, count: int = 1, span: int = 0,
             end_time: int or float = 0) -> None:
-        self.logger.info("Tap x={}, y={}".format(x, y))
+        self.logger.info("Tap x=%d, y=%d", x, y)
         cmd = Tap(x=x, y=y)
         cmdList = self.__createADBCommand(cmd.format_command())
         for _ in range(count):
@@ -53,7 +69,7 @@ class ADBWrapper:
 
     def longTap(self, x: int, y: int, hold_time: int, sync_flag: bool = True, count: int = 1, span: int = 0,
                 end_time: int = 0) -> None:
-        self.logger.info("LongTap x={}, y={}, holdTime={}".format(x, y, hold_time))
+        self.logger.info("LongTap x=%d, y=%d, holdTime=%d", x, y, hold_time)
         down_cmd = Down(x=x, y=y)
         up_cmd = Up(x=x, y=y)
         downCommandList = self.__createADBCommand(down_cmd.format_command())
@@ -73,7 +89,7 @@ class ADBWrapper:
             time.sleep(end_time)
 
     def swipe(self, x1: int, y1: int, x2: int, y2: int, end_time: int or float = 0, swipe_speed: int = 1000) -> None:
-        self.logger.info("Swipe x={} to {}, y={} to {}".format(x1, x2, y1, y2))
+        self.logger.info("Swipe x=%d to %d, y=%d to %d", x1, x2, y1, y2)
         cmd = Swipe(x1=x1, y1=y1, x2=x2, y2=y2, swipe_speed=swipe_speed)
         cmdList = self.__createADBCommand(cmd.format_command())
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
@@ -81,7 +97,7 @@ class ADBWrapper:
             time.sleep(end_time)
 
     def down(self, x: int, y: int, end_time: int = 0) -> None:
-        self.logger.info("DOWN x={}, y={}".format(x, y))
+        self.logger.info("DOWN x=%d, y=%d", x, y)
         cmd = Down(x=x, y=y)
         cmdList = self.__createADBCommand(cmd.format_command())
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
@@ -89,7 +105,7 @@ class ADBWrapper:
             time.sleep(end_time)
 
     def move(self, x: int, y: int, end_time: int = 0, sync_flag: bool = True) -> None:
-        self.logger.info("MOVE x={}, y={}".format(x, y))
+        self.logger.info("MOVE x=%d, y=%d", x, y)
         cmd = Move(x=x, y=y)
         cmdList = self.__createADBCommand(cmd.format_command())
         if sync_flag:
@@ -100,7 +116,7 @@ class ADBWrapper:
             time.sleep(end_time)
 
     def up(self, x: int, y: int, end_time: int = 0) -> None:
-        self.logger.info("UP x={}, y={}".format(x, y))
+        self.logger.info("UP x=%d, y=%d", x, y)
         cmd = Up(x=x, y=y)
         cmdList = self.__createADBCommand(cmd.format_command())
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
@@ -108,14 +124,14 @@ class ADBWrapper:
             time.sleep(end_time)
 
     def launchApp(self, app_id: str, activity_name: str) -> None:
-        self.logger.info("LaunchApp app_id = {}, activity = {}".format(app_id, activity_name))
+        self.logger.info("LaunchApp app_id = %s, activity = %s", app_id, activity_name)
         cmd = Launch(app_id=app_id, activity_name=activity_name)
         cmdList = self.__createADBCommand(cmd.format_command())
         subprocess.run(cmdList, stdout=subprocess.PIPE)
 
     def getScreenShot(self, path: Path, file_name: str) -> None:
         filePath = Path(path, file_name + ".png")
-        self.logger.info("ScreenShot = {}".format(filePath))
+        self.logger.info("ScreenShot = %s", filePath)
         while True:
             result = subprocess.run(
                 self.__createADBCommand(ScreenshotTake().format_command()),
@@ -139,17 +155,16 @@ class ADBWrapper:
         )
 
     def sendBroadcastCommand(self, intent_filter: str, args: dict[str, Union[str, int]]) -> None:
-        self.logger.info("SendBroadcast intent_filter={}".format(intent_filter))
+        self.logger.info("SendBroadcast intent_filter=%s", intent_filter)
         cmd = Broadcast(intent_filter=intent_filter)
         cmdList = self.__createADBCommand(cmd.format_command())
         for k, v in args.items():
             if type(v) == str:
-                self.logger.info("type=String key={}, value={}".format(k, v))
-                cmdList.extend(["--es", str(k), str(v)])
+                self.logger.info("type=String key=%s, value=%s", k, v)
             elif type(v) == int:
-                self.logger.info("type=Int key={}, value={}".format(k, v))
-                cmdList.extend(["--ei", str(k), str(v)])
-        self.logger.info(cmdList)
+                self.logger.info("type=Int key=%s, value=%d", k, v)
+            cmdList.extend(["--{}".format("es" if type(v) == str else "ei"), str(k), str(v)])
+        self.logger.info("command=%s", cmdList)
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
 
     def getPackageAndActivity(self) -> tuple[str, str]:
@@ -168,13 +183,13 @@ class ADBWrapper:
                 infoTextList = string.lstrip(" ").split(" ")[3].split("/")
                 package = infoTextList[0]
                 activity = infoTextList[1]
-                self.logger.info("package={}".format(package))
-                self.logger.info("activity={}".format(activity))
+                self.logger.info("package=%s", package)
+                self.logger.info("activity=%s", activity)
                 return package, activity
         return "", ""
 
     def wirelessConnect(self, ip_address: str, port: str) -> None:
-        self.logger.info("Connect to {}:{}".format(ip_address, port))
+        self.logger.info("Connect to %s:%s", ip_address, port)
         cmd = ConnectWireless(ip_address=ip_address, port=port)
         cmdList = self.__createADBCommand(cmd.format_command())
         self.deviceCode = "{}:{}".format(ip_address, port)
@@ -202,15 +217,15 @@ class ADBWrapper:
         cmdList = self.__createADBCommand(cmd.format_command())
         while True:
             result = subprocess.run(cmdList, stdout=subprocess.PIPE)
-            self.logger.info(result)
-            self.logger.info(result.stdout)
+            self.logger.info("result=%s", result)
+            self.logger.info("stdout=%s", result.stdout)
             if "1" in str(result.stdout):
                 break
             else:
                 time.sleep(3)
 
     def stopApp(self, app_id: str) -> None:
-        self.logger.info("StopApp app_id={}".format(app_id))
+        self.logger.info("StopApp app_id=%s", app_id)
         cmd = Stop(app_id=app_id)
         cmdList = self.__createADBCommand(cmd.format_command())
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
@@ -253,7 +268,7 @@ class ADBWrapper:
         if self.deviceCode is not None:
             commandPrefix += "-s {} ".format(self.deviceCode)
         cmd = commandPrefix + command_string
-        self.logger.info("cmd = {}".format(cmd))
+        self.logger.info("cmd = %s", cmd)
         return cmd.split(" ")
 
 
