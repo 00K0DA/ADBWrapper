@@ -22,8 +22,9 @@ class Pixel6AdbWrapper(PokePokeADBWrapper):
         self.tap_skip_button()
         # パックを開く
         self.swipe(165, 1325, 890, 1325, swipe_speed=250, end_time=5)
-        # カードを一枚づつ見る
-        self.tap(540, 1120, count=5, span=2, end_time=5)
+        # カードを一枚づつ見る(早送りする)
+        self.down(1000, 2300, end_time=10)
+        self.up(1000, 2300, end_time=5)
 
     def on_open_pack_result_screen(self):
         # 写真を送る
@@ -87,4 +88,17 @@ if __name__ == "__main__":
 
     # Wireless
     # adb = Pixel8ProAdbWrapper("adb-37311FDJG009F5-5QIqGs._adb-tls-connect._tcp")
-    daily(adb)
+    from datetime import datetime, timedelta
+    import time
+
+    while True:
+        now = datetime.now()
+        next_hour = now.replace(minute=0, second=0, microsecond=0) + timedelta(hours=4)
+        wait_time = (next_hour - now).total_seconds()
+        if wait_time < 0:
+            break
+        else:
+            print(f"Waiting for {wait_time} seconds...")
+            time.sleep(wait_time)
+
+        daily(adb)
