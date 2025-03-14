@@ -41,7 +41,7 @@ class Xperia10AdbWrapper(MachigaiAdbWrapper.MachigaiAdbWrapper):
 
 if __name__ == "__main__":
     adb = Xperia10AdbWrapper("HQ631V0CEF")
-    # adb.longTap(1020, 80, 2)
+    # adb.long_tap(1020, 80, 2)
     # adb.tap(1060, 80)
 
     watch_ad_loop(adb)

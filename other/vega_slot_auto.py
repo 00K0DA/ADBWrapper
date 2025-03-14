@@ -24,11 +24,11 @@ def main():
 
 
 def tap_down_button():
-    adb.longTap(300, 2050, 0)
+    adb.long_tap(300, 2050, 0)
 
 
 def tap_a_button():
-    adb.longTap(765, 1755, 0, end_time=0.5)
+    adb.long_tap(765, 1755, 0, end_time=0.5)
 
 
 if __name__ == "__main__":

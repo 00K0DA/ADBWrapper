@@ -67,7 +67,7 @@ class ADBWrapper:
         if end_time != 0:
             time.sleep(end_time)
 
-    def longTap(self, x: int, y: int, hold_time: int, sync_flag: bool = True, count: int = 1, span: int = 0,
+    def long_tap(self, x: int, y: int, hold_time: int, sync_flag: bool = True, count: int = 1, span: int = 0,
                 end_time: int = 0) -> None:
         self.logger.info("LongTap x=%d, y=%d, holdTime=%d", x, y, hold_time)
         down_cmd = Down(x=x, y=y)

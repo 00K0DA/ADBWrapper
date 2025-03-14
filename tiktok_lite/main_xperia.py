@@ -55,7 +55,7 @@ def watch_video_v2():
     start_time = time.time()
     last_restart_app_time = start_time
     video_count = 0
-    adb.longTap(540, 410, 2)
+    adb.long_tap(540, 410, 2)
     pass
 
 
