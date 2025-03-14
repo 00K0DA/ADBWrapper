@@ -257,7 +257,7 @@ class ZenIdleAdbWrapper(ADBWrapper):
 
     def is_target_app_running(self):
         self.logger.startFuncLog()
-        app_id, activity_name = self.getPackageAndActivity()
+        app_id, activity_name = self.get_package_and_activity()
         return app_id == Constants.TARGET_APP_ID and activity_name == Constants.TARGET_ACTIVITY_NAME
 
     def get_video_reward(self):
@@ -301,10 +301,10 @@ class ZenIdleAdbWrapper(ADBWrapper):
         self.reboot()
         # 再起動完了まで待機
         self.logger.info("再起動完了まで待機します")
-        self.waitForDevice()
+        self.wait_for_device()
         # 起動完了まで待機
         self.logger.info("起動完了まで待機します")
-        self.waitForBootComplete()
+        self.wait_for_boot_complete()
         time.sleep(5)
 
         while True:
@@ -316,7 +316,7 @@ class ZenIdleAdbWrapper(ADBWrapper):
             self.logger.info("アプリを起動します")
             self.launch_app(Constants.TARGET_APP_ID, Constants.TARGET_ACTIVITY_NAME)
             time.sleep(10)
-            app_id, activity_name = self.getPackageAndActivity()
+            app_id, activity_name = self.get_package_and_activity()
             if app_id == Constants.TARGET_APP_ID and activity_name == Constants.TARGET_ACTIVITY_NAME:
                 break
             else:

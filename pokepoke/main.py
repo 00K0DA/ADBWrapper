@@ -3,7 +3,7 @@ from ADBWrapper import ADBWrapper
 
 def main():
     adb = ADBWrapper("37311FDJG009F5")
-    package_name, activity_name = adb.getPackageAndActivity()
+    package_name, activity_name = adb.get_package_and_activity()
     print(package_name)
     print(activity_name)
     from pathlib import Path

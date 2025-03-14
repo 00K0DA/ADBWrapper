@@ -16,22 +16,22 @@ class TikTokLiteAdbWrapper(ADBWrapper):
         super().__init__(target_device_code, should_output_log)
 
     def is_tiktok_lite_running(self) -> bool:
-        package_name, activity_name = self.getPackageAndActivity()
+        package_name, activity_name = self.get_package_and_activity()
         return package_name == "com.ss.android.ugc.tiktok.lite"
 
     def launch_splash_activity(self):
-        self.launchApp("com.ss.android.ugc.tiktok.lite", "com.ss.android.ugc.aweme.splash.SplashActivity")
+        self.launch_app("com.ss.android.ugc.tiktok.lite", "com.ss.android.ugc.aweme.splash.SplashActivity")
 
     def is_splash_activity_shown(self) -> bool:
-        package_name, activity_name = self.getPackageAndActivity()
+        package_name, activity_name = self.get_package_and_activity()
         return package_name == "com.ss.android.ugc.tiktok.lite" and activity_name == "com.ss.android.ugc.aweme.splash.SplashActivity"
 
     def is_spark_activity_shown(self) -> bool:
-        package_name, activity_name = self.getPackageAndActivity()
+        package_name, activity_name = self.get_package_and_activity()
         return package_name == "com.ss.android.ugc.tiktok.lite" and activity_name == "com.bytedance.hybrid.spark.page.SparkActivity"
 
     def is_reward_ad_activity_shown(self) -> bool:
-        package_name, activity_name = self.getPackageAndActivity()
+        package_name, activity_name = self.get_package_and_activity()
         return package_name == "com.ss.android.ugc.tiktok.lite" and activity_name == "com.ss.android.ugc.aweme.ui.RewardAdActivity"
 
     def swipe_to_next_video(self):
@@ -50,7 +50,7 @@ class TikTokLiteAdbWrapper(ADBWrapper):
         return is_include_color(40, 1980, 40, 60, live_color, TEMP_IMAGE_PATH)
 
     def stop_tiktok(self) -> None:
-        self.stopApp("com.ss.android.ugc.tiktok.lite")
+        self.stop_app("com.ss.android.ugc.tiktok.lite")
 
     def press_reward_button(self):
         self.tap(875, 900)

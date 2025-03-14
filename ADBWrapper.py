@@ -154,7 +154,7 @@ class ADBWrapper:
             stdout=subprocess.DEVNULL
         )
 
-    def sendBroadcastCommand(self, intent_filter: str, args: dict[str, Union[str, int]]) -> None:
+    def send_broadcast_command(self, intent_filter: str, args: dict[str, Union[str, int]]) -> None:
         self.logger.info("SendBroadcast intent_filter=%s", intent_filter)
         cmd = Broadcast(intent_filter=intent_filter)
         cmdList = self.__createADBCommand(cmd.format_command())
@@ -167,7 +167,7 @@ class ADBWrapper:
         self.logger.info("command=%s", cmdList)
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
 
-    def getPackageAndActivity(self) -> tuple[str, str]:
+    def get_package_and_activity(self) -> tuple[str, str]:
         while True:
             result = subprocess.run(
                 self.__createADBCommand(GetPackage().format_command()),
@@ -188,14 +188,14 @@ class ADBWrapper:
                 return package, activity
         return "", ""
 
-    def wirelessConnect(self, ip_address: str, port: str) -> None:
+    def wireless_connect(self, ip_address: str, port: str) -> None:
         self.logger.info("Connect to %s:%s", ip_address, port)
         cmd = ConnectWireless(ip_address=ip_address, port=port)
         cmdList = self.__createADBCommand(cmd.format_command())
         self.deviceCode = "{}:{}".format(ip_address, port)
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
 
-    def pressPowerButton(self) -> None:
+    def press_power_button(self) -> None:
         self.logger.info("Press Power Button")
         self.__keyEvent("KEYCODE_POWER")
 
@@ -205,13 +205,13 @@ class ADBWrapper:
         cmdList = self.__createADBCommand(cmd.format_command())
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
 
-    def waitForDevice(self) -> None:
+    def wait_for_device(self) -> None:
         self.logger.info("WaitForDevice")
         cmd = WaitForDevice()
         cmdList = self.__createADBCommand(cmd.format_command())
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
 
-    def waitForBootComplete(self) -> None:
+    def wait_for_boot_complete(self) -> None:
         self.logger.info("WaitForBootComplete")
         cmd = WaitForBootComplete()
         cmdList = self.__createADBCommand(cmd.format_command())
@@ -224,13 +224,13 @@ class ADBWrapper:
             else:
                 time.sleep(3)
 
-    def stopApp(self, app_id: str) -> None:
+    def stop_app(self, app_id: str) -> None:
         self.logger.info("StopApp app_id=%s", app_id)
         cmd = Stop(app_id=app_id)
         cmdList = self.__createADBCommand(cmd.format_command())
         subprocess.run(cmdList, stdout=subprocess.DEVNULL)
 
-    def setScreenGrayScale(self, enabled: bool) -> None:
+    def set_screen_gray_scale(self, enabled: bool) -> None:
         if enabled:
             cmd = SetDaltonizerEnabled(enabled=1)
             cmdList = self.__createADBCommand(cmd.format_command())
@@ -243,16 +243,16 @@ class ADBWrapper:
             cmdList = self.__createADBCommand(cmd.format_command())
             subprocess.run(cmdList, stdout=subprocess.DEVNULL)
 
-    def pressBackButton(self) -> None:
+    def press_back_button(self) -> None:
         self.__keyEvent("KEYCODE_BACK")
 
-    def pressEnterButton(self) -> None:
+    def press_enter_button(self) -> None:
         self.__keyEvent("KEYCODE_ENTER")
 
-    def pressSearchButton(self) -> None:
+    def press_search_button(self) -> None:
         self.__keyEvent("KEYCODE_SEARCH")
 
-    def inputText(self, text: str) -> None:
+    def input_text(self, text: str) -> None:
         text = text.replace(" ", "%s")
         cmd = Text(text=text)
         cmdList = self.__createADBCommand(cmd.format_command())
@@ -274,5 +274,5 @@ class ADBWrapper:
 
 if __name__ == "__main__":
     adb = ADBWrapper("37311FDJG009F5")
-    adb.getPackageAndActivity()
+    adb.get_package_and_activity()
     pass

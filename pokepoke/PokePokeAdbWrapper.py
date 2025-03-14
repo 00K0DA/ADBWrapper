@@ -28,7 +28,7 @@ class PokePokeADBWrapper(ADBWrapper, ABC):
         self.launch_app(self.app_id, self.activity)
 
     def stop_pokepoke(self):
-        self.stopApp(app_id=self.app_id)
+        self.stop_app(app_id=self.app_id)
 
     def open_home_screen(self):
         sleep(10)
@@ -43,7 +43,7 @@ class PokePokeADBWrapper(ADBWrapper, ABC):
         return any(result_list)
 
     def is_pokepoke_running(self) -> bool:
-        package_name, activity_name = self.getPackageAndActivity()
+        package_name, activity_name = self.get_package_and_activity()
         return package_name == self.app_id and activity_name == self.activity
 
     @abstractmethod

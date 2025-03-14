@@ -65,16 +65,12 @@ def watch_ad(adb: MachigaiAdbWrapper):
         time.sleep(wait_seconds)
 
     while True:
-        _, activity_name = adb.getPackageAndActivity()
-        if ad_activity := AdActivity.resolve(activity_name):
-            adb.on_ad_activity_shown(ad_activity)
-        elif PlayStoreActivity.resolve(activity_name):
-            adb.on_play_store_activity_shown()
-        elif activity_name == ".MainActivity":
+        _, activity_name = adb.get_package_and_activity()
+        if activity_name == ".MainActivity":
             break
         else:
             logging.info(f"Unknown activity: {activity_name}")
-            adb.pressBackButton()
+            adb.press_back_button()
 
         time.sleep(1)
 
