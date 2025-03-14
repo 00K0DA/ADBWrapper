@@ -123,7 +123,7 @@ class ADBWrapper:
         if end_time != 0:
             time.sleep(end_time)
 
-    def launchApp(self, app_id: str, activity_name: str) -> None:
+    def launch_app(self, app_id: str, activity_name: str) -> None:
         self.logger.info("LaunchApp app_id = %s, activity = %s", app_id, activity_name)
         cmd = Launch(app_id=app_id, activity_name=activity_name)
         cmdList = self.__createADBCommand(cmd.format_command())

@@ -25,7 +25,7 @@ class PokePokeADBWrapper(ADBWrapper, ABC):
         if self.is_pokepoke_running():
             self.stop_pokepoke()
             sleep(5)
-        self.launchApp(self.app_id, self.activity)
+        self.launch_app(self.app_id, self.activity)
 
     def stop_pokepoke(self):
         self.stopApp(app_id=self.app_id)
