@@ -19,6 +19,7 @@ def daily(adb: PokePokeADBWrapper, retry_count: int):
     start_time = datetime.now()
     logging.debug("Start daily")
     adb.send_start_message()
+    adb.close_abnormal_dialog()
     adb.stop_pokepoke()
     adb.open_pokepoke()
     adb.open_home_screen()

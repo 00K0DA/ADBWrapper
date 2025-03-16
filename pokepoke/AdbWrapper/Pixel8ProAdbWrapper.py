@@ -1,3 +1,5 @@
+import time
+
 from pokepoke.PokePokeAdbWrapper import PokePokeADBWrapper
 from pokepoke.senario import daily
 
@@ -80,6 +82,15 @@ class Pixel8ProAdbWrapper(PokePokeADBWrapper):
         self.tap(500, 2150, end_time=5)
         # ホームに戻る
         self.tap(140, 2185, end_time=5)
+
+    def close_abnormal_dialog(self):
+        self.stop_pokepoke()
+        time.sleep(5)
+        self.open_pokepoke()
+        adb.open_home_screen()
+        #カードの取得が正常に行われていない場合に出るダイアログを閉じる
+        adb.tap(540, 1475, end_time=2)
+        self.stop_pokepoke()
 
 
 if __name__ == "__main__":

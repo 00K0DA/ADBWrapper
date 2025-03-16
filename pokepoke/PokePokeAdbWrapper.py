@@ -108,11 +108,9 @@ class PokePokeADBWrapper(ADBWrapper, ABC):
         self.dis.send_message(message)
 
     def send_start_message(self):
-        self.get_screen_shot(self.image_dir_path, self.image_name)
         message = DiscordMessage(
             title="処理を開始します。",
             message_list=[f"device_code = {self.device_code}"],
-            image_path=self.image_path
         )
         self.dis.send_message(message)
 
@@ -123,3 +121,7 @@ class PokePokeADBWrapper(ADBWrapper, ABC):
             message_list=[f"device_code = {self.device_code}", f"次の動作予定時刻 = {datetime_string}"]
         )
         self.dis.send_message(message)
+
+    @abstractmethod
+    def close_abnormal_dialog(self):
+        pass
