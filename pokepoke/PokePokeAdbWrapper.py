@@ -106,3 +106,12 @@ class PokePokeADBWrapper(ADBWrapper, ABC):
             image_path=self.image_path
         )
         self.dis.send_message(message)
+
+    def send_start_message(self):
+        self.get_screen_shot(self.image_dir_path, self.image_name)
+        message = DiscordMessage(
+            title="処理を開始します。",
+            message_list=[f"device_code = {self.device_code}"],
+            image_path=self.image_path
+        )
+        self.dis.send_message(message)

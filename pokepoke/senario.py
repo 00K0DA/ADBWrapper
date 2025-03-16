@@ -9,8 +9,13 @@ logging.basicConfig(
 )
 sound_player = SoundPlayer()
 
-def daily(adb: PokePokeADBWrapper):
+
+def daily(adb: PokePokeADBWrapper, retry_count: int = 0):
+    if retry_count >= 3:
+        logging.debug("Retry count is over")
+        return
     logging.debug("Start daily")
+    adb.send_start_message()
     adb.stop_pokepoke()
     adb.open_pokepoke()
     adb.open_home_screen()
@@ -26,7 +31,7 @@ def daily(adb: PokePokeADBWrapper):
         adb.on_open_pack_result_screen()
         # # 未入手のカードがあった
         adb.on_get_new_cards()
-        daily(adb)
+        daily(adb, retry_count + 1)
     else:
         logging.debug("Can't Open Pack!!")
         logging.debug("Claim daily mission reward")

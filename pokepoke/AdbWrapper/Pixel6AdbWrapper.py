@@ -21,7 +21,7 @@ class Pixel6AdbWrapper(PokePokeADBWrapper):
         # スキップボタンをタップ
         self.tap_skip_button()
         # パックを開く
-        self.swipe(165, 1325, 890, 1325, swipe_speed=250, end_time=5)
+        self.swipe(65, 1325, 900, 1325, swipe_speed=500, end_time=5)
         # カードを一枚づつ見る(早送りする)
         self.down(1000, 2300, end_time=10)
         self.up(1000, 2300, end_time=5)
