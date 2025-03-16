@@ -1,3 +1,5 @@
+import time
+
 from pokepoke.PokePokeAdbWrapper import PokePokeADBWrapper
 from pokepoke.senario import daily
 
@@ -81,6 +83,15 @@ class Pixel6AdbWrapper(PokePokeADBWrapper):
         # ホームに戻る
         self.tap(140, 2320, end_time=5)
 
+    def close_abnormal_dialog(self):
+        self.stop_pokepoke()
+        time.sleep(5)
+        self.open_pokepoke()
+        self.open_home_screen()
+        # カードの取得が正常に行われていない場合に出るダイアログを閉じる
+        self.tap(540, 1575, end_time=2)
+        self.stop_pokepoke()
+
 
 if __name__ == "__main__":
     # Wired
@@ -89,15 +100,4 @@ if __name__ == "__main__":
     # Wireless
     # adb = Pixel8ProAdbWrapper("adb-37311FDJG009F5-5QIqGs._adb-tls-connect._tcp")
 
-
-    while True:
-        now = datetime.now()
-        next_hour = now.replace(minute=0, second=0, microsecond=0) + timedelta(hours=4)
-        wait_time = (next_hour - now).total_seconds()
-        if wait_time < 0:
-            break
-        else:
-            print(f"Waiting for {wait_time} seconds...")
-            time.sleep(wait_time)
-
-        daily(adb)
+    daily(adb, retry_count=0)

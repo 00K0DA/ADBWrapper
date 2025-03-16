@@ -87,9 +87,9 @@ class Pixel8ProAdbWrapper(PokePokeADBWrapper):
         self.stop_pokepoke()
         time.sleep(5)
         self.open_pokepoke()
-        adb.open_home_screen()
-        #カードの取得が正常に行われていない場合に出るダイアログを閉じる
-        adb.tap(540, 1475, end_time=2)
+        self.open_home_screen()
+        # カードの取得が正常に行われていない場合に出るダイアログを閉じる
+        self.tap(540, 1475, end_time=2)
         self.stop_pokepoke()
 
 
