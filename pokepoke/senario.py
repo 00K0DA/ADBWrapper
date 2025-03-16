@@ -1,6 +1,8 @@
 from pokepoke.PokePokeAdbWrapper import PokePokeADBWrapper
 import logging
 from Sound_Player import SoundPlayer
+from datetime import datetime, timedelta
+import time
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -10,10 +12,11 @@ logging.basicConfig(
 sound_player = SoundPlayer()
 
 
-def daily(adb: PokePokeADBWrapper, retry_count: int = 0):
+def daily(adb: PokePokeADBWrapper, retry_count: int):
     if retry_count >= 3:
         logging.debug("Retry count is over")
         return
+    start_time = datetime.now()
     logging.debug("Start daily")
     adb.send_start_message()
     adb.stop_pokepoke()
@@ -44,7 +47,15 @@ def daily(adb: PokePokeADBWrapper, retry_count: int = 0):
         adb.auto_like()
         logging.debug("Finish daily")
 
+    next_start_time = start_time.replace(minute=0, second=0, microsecond=0) + timedelta(hours=4)
+    wait_time = (next_start_time - start_time).total_seconds()
+
     sound_player.notify()
+
+    logging.debug(f"Waiting for {wait_time} seconds...")
+    adb.send_finish_message(next_start_time)
+    time.sleep(wait_time)
+    daily(adb, 0)
 
 
 if __name__ == "__main__":

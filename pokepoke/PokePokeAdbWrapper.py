@@ -1,6 +1,6 @@
 from ADBWrapper import ADBWrapper
 from abc import ABC, abstractmethod
-
+from datetime import datetime
 from DiscordNotificator import DiscordMessage
 from image_util import get_color
 from pathlib import Path
@@ -113,5 +113,13 @@ class PokePokeADBWrapper(ADBWrapper, ABC):
             title="処理を開始します。",
             message_list=[f"device_code = {self.device_code}"],
             image_path=self.image_path
+        )
+        self.dis.send_message(message)
+
+    def send_finish_message(self, next_start_datetime: datetime):
+        datetime_string = next_start_datetime.strftime("%Y-%m-%d %H:%M:%S")
+        message = DiscordMessage(
+            title="処理の終了",
+            message_list=[f"device_code = {self.device_code}", f"次の動作予定時刻 = {datetime_string}"]
         )
         self.dis.send_message(message)

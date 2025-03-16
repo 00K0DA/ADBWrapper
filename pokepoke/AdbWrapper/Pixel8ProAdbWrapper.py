@@ -21,7 +21,7 @@ class Pixel8ProAdbWrapper(PokePokeADBWrapper):
         # スキップボタンをタップ
         self.tap_skip_button()
         # パックを開く
-        self.swipe(165, 1245, 890, 1245, swipe_speed=250, end_time=5)
+        self.swipe(100, 1245, 900, 1245, swipe_speed=500, end_time=5)
         # カードを一枚づつ見る
         self.tap(540, 1120, count=5, span=1, end_time=5)
 
@@ -88,5 +88,5 @@ if __name__ == "__main__":
 
     # Wireless
     # adb = Pixel8ProAdbWrapper("adb-37311FDJG009F5-5QIqGs._adb-tls-connect._tcp")
-    daily(adb)
+    daily(adb, retry_count=0)
     # adb.send_result_screen()

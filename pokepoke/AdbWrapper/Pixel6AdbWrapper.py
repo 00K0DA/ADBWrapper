@@ -88,8 +88,7 @@ if __name__ == "__main__":
 
     # Wireless
     # adb = Pixel8ProAdbWrapper("adb-37311FDJG009F5-5QIqGs._adb-tls-connect._tcp")
-    from datetime import datetime, timedelta
-    import time
+
 
     while True:
         now = datetime.now()
