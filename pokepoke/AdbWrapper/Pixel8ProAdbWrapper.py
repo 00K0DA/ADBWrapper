@@ -23,9 +23,10 @@ class Pixel8ProAdbWrapper(PokePokeADBWrapper):
         # スキップボタンをタップ
         self.tap_skip_button()
         # パックを開く
-        self.swipe(100, 1245, 900, 1245, swipe_speed=500, end_time=5)
-        # カードを一枚づつ見る
-        self.tap(540, 1120, count=5, span=1, end_time=5)
+        self.swipe(100, 1245, 900, 1245, swipe_speed=250, end_time=5)
+        # カードを一枚づつ見る(早送りする)
+        adb.down(900, 2150, end_time=10)
+        adb.up(900, 2150, end_time=5)
 
     def on_open_pack_result_screen(self):
         # 写真を送る
