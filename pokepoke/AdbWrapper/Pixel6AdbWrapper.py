@@ -25,8 +25,8 @@ class Pixel6AdbWrapper(PokePokeADBWrapper):
         # パックを開く
         self.swipe(65, 1325, 900, 1325, swipe_speed=500, end_time=5)
         # カードを一枚づつ見る(早送りする)
-        self.down(1000, 2300, end_time=10)
-        self.up(1000, 2300, end_time=5)
+        self.down(1000, 2300, end_time=15)
+        self.up(1000, 2300)
 
     def on_open_pack_result_screen(self):
         # 写真を送る
