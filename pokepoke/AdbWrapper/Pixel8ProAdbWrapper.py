@@ -25,8 +25,8 @@ class Pixel8ProAdbWrapper(PokePokeADBWrapper):
         # パックを開く
         self.swipe(100, 1245, 900, 1245, swipe_speed=250, end_time=5)
         # カードを一枚づつ見る(早送りする)
-        adb.down(900, 2150, end_time=15)
-        adb.up(900, 2150)
+        self.down(900, 2150, end_time=15)
+        self.up(900, 2150)
 
     def on_open_pack_result_screen(self):
         # 写真を送る
